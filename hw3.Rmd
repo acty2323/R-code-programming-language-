@@ -1,0 +1,80 @@
+---
+title: "hw3"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## 1
+Write Rmarkdown codes to provide the expression of probability density function (pdf) or probability mass function (pmf) of the following distribution.
+
+### (a)
+Binomial distribution with parameters n and p with x=0,...,n
+
+pmf:
+$$ f(x)=(_x^n)p^x (1-p)^{n-x},x=0,...,n $$
+
+### (b)
+Gamma distribution with shape parameter $\alpha$ and the rate $\lambda$ with x>0
+
+pdf:
+$$f(x)=\frac{x^{\alpha-1}e^\frac{-x}{\beta}}{\Gamma(\alpha)\beta^\alpha},x>0$$
+
+### (c)
+Normal distribution with parameters $\mu$ and $\sigma^2$ with $-\infty<x<\infty$
+
+pdf:
+$$f(x)=\frac{1}{\sigma\surd2\pi}e^\frac{-(x-\mu)^2}{2\sigma^2},-\infty<x<\infty$$
+
+## 2
+Draw the pdf (or pmf) of each distribution in Question 1. Write codes and use all control
+argument in plot(…) and par(…) to show the following plots. 
+
+```{r,fig.width=10,fig.height=8}
+par(mfrow=c(2,2))
+xx<-dbinom(0:10,10,0.7)
+plot(c(0:10),xx,type=c("p"),pch=19,cex=1.5,ylim=c(0,0.4),xlab="x",ylab = "pmf",main=expression("Binomial(n,p) with n=10"))
+segments(c(0:10),xx,c(0:10),rep(0,11),lwd=1.25)
+par(new=TRUE)
+xx<-dbinom(0:10,10,0.5)
+plot(c(0:10),xx,type=c("p"),pch=8,col="blue",cex=1.5,ylim=c(0,0.4),xlab="x",ylab = "pmf",main=expression("Binomial(n,p) with n=10"))
+segments(c(0:10),xx,c(0:10),rep(0,11),lty=4,col="blue",lwd=1.25)
+par(new=TRUE)
+xx<-dbinom(0:10,10,0.2)
+plot(c(0:10),xx,type=c("p"),pch=17,col="red",cex=1.5,ylim=c(0,0.4),xlab="x",ylab = "pmf",main=expression("Binomial(n,p) with n=10"))
+segments(c(0:10),xx,c(0:10),rep(0,11),lty=2,col="red",lwd=1.5)
+legend("topright",c("p=0.7","p=0.5","p=0.2"),col=c("black","blue","red"),pch=c(19,8,17),lty=c(1,4,2),cex=1)
+
+
+curve(dgamma(x,1,3),0,5,ylim=c(0.0,3.0),ylab="pdf",main=expression(paste("Gamma(", alpha , ", ", lambda, ") with ", lambda, " = 3")))
+par(new=TRUE)
+curve(dgamma(x,2,3),0,5,lty=2,col="red",ylim=c(0,3.0),ylab="pdf",main=expression(paste("Gamma(", alpha , ", ", lambda, ") with ", lambda, " = 3")))
+par(new=TRUE)
+curve(dgamma(x,3,3),0,5,lty=4,col="blue",ylim=c(0,3.0),ylab="pdf",main=expression(paste("Gamma(", alpha , ", ", lambda, ") with ", lambda, " = 3")))
+par(new=TRUE)
+curve(dgamma(x,5,3),0,5,lty=5,col="grey",ylim=c(0,3.0),ylab="pdf",main=expression(paste("Gamma(", alpha , ", ", lambda, ") with ", lambda, " = 3")))
+legend("topright",c(expression(paste(alpha,"=1")),expression(paste(alpha,"=2")),expression(paste(alpha,"=3")),expression(paste(alpha,"=5"))),col=c("black","red","blue","grey"),lty=c(1,2,4,5),cex=1)
+
+curve(dnorm(x,5,1),0,20,ylim=c(0.0,0.4),ylab="pdf",main=expression(paste("N(",mu,",",sigma^2,") with ",sigma^2,"=1")))
+par(new=TRUE)
+curve(dnorm(x,10,1),0,20,lty=2,col="red",ylim=c(0.0,0.4),ylab="pdf",main=expression(paste("N(",mu,",",sigma^2,") with ",sigma^2,"=1")))
+par(new=TRUE)
+curve(dnorm(x,12,1),0,20,lty=4,col="blue",ylim=c(0.0,0.4),ylab="pdf",main=expression(paste("N(",mu,",",sigma^2,") with ",sigma^2,"=1")))
+par(new=TRUE)
+curve(dnorm(x,14,1),0,20,lty=5,col="grey",ylim=c(0.0,0.4),ylab="pdf",main=expression(paste("N(",mu,",",sigma^2,") with ",sigma^2,"=1")))
+legend("topright",c(expression(paste(mu,"=5")),expression(paste(mu,"=10")),expression(paste(mu,"=12")),expression(paste(mu,"=14"))),col=c("black","red","blue","grey"),lty=c(1,2,4,5),cex=1)
+
+curve(dnorm(x,0,0.5),-9,9,xlim=c(-9,9),ylim=c(0.0,0.8),ylab="pdf",main=expression(paste("N(",mu,",",sigma^2,") with ",mu,"=0")))
+par(new=TRUE)
+curve(dnorm(x,0,1),-9,9,lty=2,col="red",xlim=c(-9,9),ylim=c(0.0,0.8),ylab="pdf",main=expression(paste("N(",mu,",",sigma^2,") with ",mu,"=0")))
+par(new=TRUE)
+curve(dnorm(x,0,2),-9,9,lty=4,col="blue",xlim=c(-9,9),ylim=c(0.0,0.8),ylab="pdf",main=expression(paste("N(",mu,",",sigma^2,") with ",mu,"=0")))
+par(new=TRUE)
+curve(dnorm(x,0,3),-9,9,lty=5,col="grey",xlim=c(-9,9),ylim=c(0.0,0.8),ylab="pdf",main=expression(paste("N(",mu,",",sigma^2,") with ",mu,"=0")))
+legend("topright",c(expression(paste(sigma,"=0.5")),expression(paste(sigma,"=1")),expression(paste(sigma,"=2")),expression(paste(sigma,"=3"))),col=c("black","red","blue","grey"),lty=c(1,2,4,5),cex=1)
+
+```
+
+
