@@ -1,0 +1,208 @@
+---
+title: "final exam"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## 1. (25%)
+Answer the following questions:
+
+(a) Give two simple functions to evaluate the sum of each column for a matrix. (Do not use for(. . . ))
+  
+  Ans:colSums(),apply()
+
+(b) What is the function that can be used for comparion of computation time?
+
+  Ans:benchmark()
+
+(c) Try to use function in the family “APPLY” and the defined function to evaluate the following
+quantity for each row of a matrix?
+```{r}
+row.sum<-function(x){
+  row<-c()
+  n<-dim(x)[2]
+  row_mean<-apply(x,1,mean)
+  for (rr in row_mean){
+    c=0
+    for (cc in (1:n)){
+      c<-c+((abs(cc-rr))/n)
+    }
+    row<-c(row,c)
+  }
+  return(row)
+}
+X <- matrix(c(-0.45 , 0.77, 0.16, 1.22, 1.75, 0.24,
+0.27, 1.74, 0.07, -0.87, -0.90, 1.07,
+-0.06, 0.33, -0.06, 0.09, 0.10, -0.04), 3, 6, byrow = TRUE)
+row.sum(X)
+```
+(d) Draw the curve by the following equations and identify what the graph is.
+```{r}
+curve((1-x^2)^(1/2),-1,1,ylim=c(-1,1),ylab="y")
+par(new=TRUE)
+curve(-((1-x^2)^(1/2)),-1,1,ylim=c(-1,1),ylab="y")
+```
+
+the graph is a circle.
+(e) Use the dataset iris. Write a code to draw the plot
+```{r}
+data.le<-iris
+s<-data.le[data.le[,"Species"]=="setosa",c("Sepal.Length","Petal.Length")]
+plot(s$Sepal.Length,s$Petal.Length,xlim=c(4,10),ylim=c(0,10),xlab="Sepal.Length",ylab="Petal.Length")
+par(new=TRUE)
+v<-data.le[data.le[,"Species"]=="versicolor",c("Sepal.Length","Petal.Length")]
+plot(v$Sepal.Length,v$Petal.Length,xlim=c(4,10),ylim=c(0,10),xlab="Sepal.Length",ylab="Petal.Length",col="red")
+par(new=TRUE)
+vir<-data.le[data.le[,"Species"]=="virginica",c("Sepal.Length","Petal.Length")]
+plot(vir$Sepal.Length,vir$Petal.Length,xlim=c(4,10),ylim=c(0,10),xlab="Sepal.Length",ylab="Petal.Length",col="green")
+legend("topright",c("setosa","versicolor","virginiva"),pch=1,col=c("black","red","green"))
+```
+
+## 2. (30%) 
+Download the package “titanic” and library("titanic"). Use data(titanic_train) to the
+following questions:
+```{r}
+library("titanic")
+data.2<-titanic_train
+```
+(a)Extract the column names of the dateset.
+```{r}
+people<-unique(data.2$Name)
+pp<-length(people)
+pp
+```
+
+(b)How many people are there in the dataset? The column “Survived” is Passenger Survival Indicator
+with dead 0 and survival 1. How many survived people are there?
+
+891 people.
+```{r}
+s<-data.2[data.2$Survived==1,"Sex"]
+ss<-length(s)
+ss
+```
+
+(c) Draw two pie charts for the columns of Survived and Sex
+```{r}
+pie(table(s),main="survived")
+pie(table(data.2$Sex),main="sex")
+sex_f<-data.2[data.2$Sex=="female","Survived"]
+pie(table(sex_f),main="female")
+sex_m<-data.2[data.2$Sex=="male","Survived"]
+pie(table(sex_m),main="male")
+
+```
+
+(d)Provide the value of percentage of each gender in both survival group and dead group.
+
+survival:`r round((ss/pp),3)*100`%
+
+dead:`r round(((pp-ss)/pp),3)*100`%
+
+(e) Try to write a code with function(...) to creat the dummy variables for an arbitrary discrete
+variable.
+
+
+```{r}
+dummy<-function(x){
+  n<-unique(x)
+  df<-data.frame(n)
+  for (j in x){
+    c<-c(rep(0,j-1),1,rep(0,length(n)-j))
+    df<-rbind(df,c)
+  }
+  df<-df[-1,]
+  return(df)
+}
+
+```
+(f)Use titanic_train$Pclass and titanic_train$Sex to test your function in (e). Report the
+sum of each column of dummy variables.
+```{r}
+dummy(as.list(data.2$Pclass))
+#dummy(as.list(data.2$Sex))
+
+```
+
+## 3. (15%) 
+Let x <- seq(-1.5, 1.5, 0.01) and y <- seq(-1.5, 1.5, 0.01).
+(a) • Use a matrix to collect all possible combinations of x and y into a matrix satisfying
+```{r}
+x<-seq(-1.5,1.5,0.01);y<-seq(-1.5,1.5,0.01)
+m<-matrix(nrow=0,ncol=3)
+for (xx in x){
+  for (yy in y){
+    k<-xx^2*yy^3-(xx^2+yy^2-1)^3
+    if (k>=0){
+     m<- rbind(m,c(xx,yy,k))
+    }else{
+      next
+    }
+  }
+}
+```
+(b)
+```{r}
+plot(m[,1],m[,2])
+```
+is a love!!!!!!
+
+## 4. (30%) 
+Download the package “nlme” and library(nlme). Begin with the data: data(Fatigue). There
+are three columns, which are “Path”, “cycles”, and “relLength”. Path means the ID number of a unit,
+cycles means the measurement time point, and relLength means the crack length over cycles. Use
+the Fatigue data to the following questions:
+```{r}
+library("nlme")
+data.4<-Fatigue
+```
+(a)How many units are there in the dataset?
+```{r}
+p<-unique(data.4$Path)
+length(p)
+```
+(b)Try to plot the degradation path for all of the units, which means the x-axis is the cycles and the
+y-axis is the relLength. Note that there are n (from (a)) paths in the same plot, and use type =
+"b" in plot(...). (The label names of x-axis and y-axis should be meaningful.)
+```{r}
+for (i in (1:20)){
+  a<-data.4[data.4$Path==i,c("cycles","relLength")]
+  plot(a$cycle,a$relLength,type="b",xlab="cycles",ylab=" relLength",xlim=c(0,0.12),ylim=c(1,2))
+  par(new=TRUE)
+}
+par(new=TRUE)
+a<-data.4[data.4$Path==21,c("cycles","relLength")]
+  plot(a$cycle,a$relLength,type="b",xlab="cycles",ylab=" relLength",xlim=c(0,0.12),ylim=c(1,2))
+```
+(c)Define the failure threshold to be 1.4. Add an horizontal line at 1.4 to the plot in (b) by different
+format (eg, different style of line or different color).
+```{r}
+for (i in (1:20)){
+  a<-data.4[data.4$Path==i,c("cycles","relLength")]
+  plot(a$cycle,a$relLength,type="b",xlab="cycles",ylab=" relLength",xlim=c(0,0.12),ylim=c(1,2))
+  par(new=TRUE)
+}
+par(new=TRUE)
+a<-data.4[data.4$Path==21,c("cycles","relLength")]
+  plot(a$cycle,a$relLength,type="b",xlab="cycles",ylab=" relLength",xlim=c(0,0.12),ylim=c(1,2))
+abline(h=1.4,lty=1,col="red")
+```
+(d) Try to provide the number of failures in the dataset during the testing period.
+```{r}
+f<-data.4[data.4$relLength>=1.4,"cycles"]
+length(f)
+```
+
+(e) Use a transformation y = log(relLength), and fit a linear regression for each path with the following
+model:
+```{r}
+#y<-log(data.4$relLength)
+#data.4$log<-y
+#aa<-data.4[data.4$Path==1,c("cycles","log")]
+#aa
+#lm1<-lm(log~cycles-1,data=aa)
+#summary(lm)
+```
